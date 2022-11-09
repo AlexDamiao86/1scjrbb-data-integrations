@@ -15,14 +15,15 @@ public class DroneProducer {
     @Value("${topic.name.producer}")
     private String topicName;
 
-    private final KafkaTemplate<Long, String> kafkaTemplate;
+    private final KafkaTemplate<Long, Drone> kafkaTemplate;
 
-    public void send(Drone drone, String mensagem) {
-        log.info("Drone: ", drone.getId());
-        log.info("Temperatura: ", drone.getTemperatura());
-        log.info("Umidade: ", drone.getUmidade());
+    public void send(Drone drone) {
+        log.info("Dados recebidos do Drone");
+        log.info("Drone...............: ", drone.getId());
+        log.info("Temperatura.........: ", drone.getTemperatura());
+        log.info("Umidade.............: ", drone.getUmidade());
         log.info("Rastreamento ativado: ", drone.getRastrear());
 
-        kafkaTemplate.send(topicName, mensagem);
+        kafkaTemplate.send(topicName, drone.getId(), drone);
     }
 }

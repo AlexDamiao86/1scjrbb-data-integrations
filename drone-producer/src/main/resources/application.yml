@@ -1,21 +1,17 @@
 server:
   port: 8080
 
-# commons
-auto:
-  create:
-    topics:
-      enable: true
-
 spring:
   kafka:
     producer:
-      bootstrap-servers: 0.0.0.0:29092
+      bootstrap-servers: 0.0.0.0:9092
+      client-id: drone-producer
       key-serializer: org.apache.kafka.common.serialization.LongSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-      client-id: drones
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        "[spring.json.type.mapping]": drone:br.com.fiap.droneproducer.model.Drone
 
 topic:
   name:
-    producer: drone-read
+    producer: drone-data
 

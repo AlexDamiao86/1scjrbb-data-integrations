@@ -1,12 +1,11 @@
 package br.com.fiap.droneproducer.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@EqualsAndHashCode
 public class Drone {
 
     private Long id;
