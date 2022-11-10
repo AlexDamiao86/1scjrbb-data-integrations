@@ -31,6 +31,9 @@ public class KafkaConfig {
     @Value("${topic.name.producer}")
     String topicName;
 
+    @Value("${topic.partition.number}")
+    int numberPartitions;
+
     @Bean
     public ProducerFactory<Long, Drone> producerFactory() {
         Map<String, Object> config = new HashMap<>();
@@ -50,6 +53,6 @@ public class KafkaConfig {
 
     @Bean
     public NewTopic createTopic() {
-        return new NewTopic(topicName, 1, (short) 1);
+        return new NewTopic(topicName, numberPartitions, (short) 1);
     }
 }

@@ -8,10 +8,9 @@ spring:
       client-id: drone-producer
       key-serializer: org.apache.kafka.common.serialization.LongSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      properties:
-        "[spring.json.type.mapping]": drone:br.com.fiap.droneproducer.model.Drone
 
 topic:
   name:
     producer: drone-data
-
+  partition:
+    number: 5

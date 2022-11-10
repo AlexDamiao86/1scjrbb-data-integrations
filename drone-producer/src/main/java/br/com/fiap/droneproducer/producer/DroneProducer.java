@@ -18,12 +18,13 @@ public class DroneProducer {
     private final KafkaTemplate<Long, Drone> kafkaTemplate;
 
     public void send(Drone drone) {
-        log.info("Dados recebidos do Drone");
-        log.info("Drone...............: ", drone.getId());
-        log.info("Temperatura.........: ", drone.getTemperatura());
-        log.info("Umidade.............: ", drone.getUmidade());
-        log.info("Rastreamento ativado: ", drone.getRastrear());
-
+        System.out.println("Dados recebidos do Drone");
+        System.out.println("Id..................: " + drone.getId());
+        System.out.println("Latitude............: " + drone.getLatitude());
+        System.out.println("Longitude...........: " + drone.getLongitude());
+        System.out.println("Temperatura.........: " + drone.getTemperatura());
+        System.out.println("Umidade.............: " + drone.getUmidade());
+        System.out.println("Rastreamento ativado: " + drone.getRastrear());
         kafkaTemplate.send(topicName, drone.getId(), drone);
     }
 }
