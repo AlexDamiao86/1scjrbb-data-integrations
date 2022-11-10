@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/drone")
 public class DroneController {
@@ -20,7 +22,7 @@ public class DroneController {
 
     @PostMapping("/publish")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void publishMessage(@RequestBody Drone drone) {
+    public void publishMessage(@RequestBody @Valid Drone drone) {
         droneProducer.send(drone);
     }
 }
