@@ -20,7 +20,7 @@ public class ValidationErrorHandler {
     @Autowired
     private MessageSource messageSource;
 
-    @ResponseStatus(code = HttpStatus.BAD_GATEWAY)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public List<DroneError> handle(MethodArgumentNotValidException exception) {
 
