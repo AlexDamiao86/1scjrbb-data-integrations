@@ -6,7 +6,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class DroneError {
-
     private String campo;
     private String mensagem;
 }
