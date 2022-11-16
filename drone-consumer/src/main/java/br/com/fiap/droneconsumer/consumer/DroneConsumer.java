@@ -1,7 +1,6 @@
 package br.com.fiap.droneconsumer.consumer;
 
 import br.com.fiap.droneconsumer.model.Drone;
-import br.com.fiap.droneconsumer.model.DroneAlerta;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +16,7 @@ import java.util.Map;
 public class DroneConsumer {
 
     private static final Logger log = LoggerFactory.getLogger(DroneConsumer.class);
-    private Map<Long, DroneAlerta> dronesAlerta = new HashMap<Long, DroneAlerta>();
+    private final Map<Long, LocalDateTime> dronesAlerta = new HashMap<>();
 
     @Value("${topic.name.consumer}")
     String topicName;
@@ -41,18 +40,16 @@ public class DroneConsumer {
                         drone.getUmidade() <= 15)) {
             // O e-mail será enviado apenas se houver o primeiro alerta ocorreu a mais de um minuto atrás
             if (dronesAlerta.containsKey(drone.getId())) {
-                DroneAlerta droneAlerta = dronesAlerta.get(drone.getId());
-                long minutos = droneAlerta.getDataHoraRecebido().until(LocalDateTime.now(), ChronoUnit.MINUTES);
-                if (minutos >= 1) {
+                LocalDateTime primeiroAlerta = dronesAlerta.get(drone.getId());
+                long tempoPrimeiroAlerta = primeiroAlerta.until(LocalDateTime.now(), ChronoUnit.MINUTES);
+                if (tempoPrimeiroAlerta >= 1) {
                     log.warn("Enviado e-mail: " + drone);
                     dronesAlerta.remove(drone.getId());
                 }
             } else {
-                DroneAlerta droneAlerta = new DroneAlerta(drone);
-                dronesAlerta.put(droneAlerta.getId(), droneAlerta);
-                log.warn("Inserido drone " + droneAlerta.getId() + " no alerta");
+                dronesAlerta.put(drone.getId(), LocalDateTime.now());
+                log.warn("Drone " + drone.getId() + " em alerta!");
             }
         }
     }
-
 }
