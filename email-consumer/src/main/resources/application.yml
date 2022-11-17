@@ -10,8 +10,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: alexandremaia.dev@gmail.com
-    password: zxvkvbhdovakkdmj
+    username: GMAIL_SERVER_USERNAME
+    password: GMAIL_SERVER_PASSWORD
     properties:
       mail:
         smtp:
@@ -21,3 +21,6 @@ spring:
 topic:
   name:
     consumer: send-email
+
+email:
+  to: alex_maiabr@hotmail.com
