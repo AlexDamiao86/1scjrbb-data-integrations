@@ -14,14 +14,15 @@ A aplicação está dividida em 3 projetos Java Spring.
 
 1) <i>drone-producer</i> - Disponibiliza um endpoint POST /drone/publish para que os drones enviem os dados para o sistema. 
 Valida as informações recebidas dos drones que deverão atender algumas condições:
-- Id (valor numérico)
+- Id (valor numérico maior ou igual a 1)
 - Latitude (valor numérico entre -90 e 90)
 - Longitude (valor numérico entre -180 e 180)
 - Temperatura (valor numérico entre -25 e 40)
 - Umidade (valor numérico entre 0 e 100)
 - Rastrear (true ou false)
 
-Caso os dados recebidos estejam válidos, gera mensagem no tópico <i>drone-data</i> e devolve o HTTP Status Code 202 (Accepted) para o drone. 
+Caso os dados recebidos estejam válidos, gera mensagem no tópico <i>drone-data</i> e devolve o HTTP Status Code 202 (Accepted) para o drone.
+Caso contrário, devolve HTTP Status Code 400 (Bad Request) e lista com campo e respectiva mensagem de erro.
 
 2) <i>drone-consumer</i> - Consome mensagens do tópico <i>drone-data</i>, analisa os dados e verifica se a área monitorada por um determinado drone encontra-se em condições climáticas alarmantes. 
 Se este mesmo drone continuar informando condições climáticas alarmantes por mais de 1 minuto será gerado uma mensagem no tópico <i>send-email</i>.

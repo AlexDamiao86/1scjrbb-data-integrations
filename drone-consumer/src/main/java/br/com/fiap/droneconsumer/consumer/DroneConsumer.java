@@ -16,7 +16,7 @@ import java.util.Map;
 @Service
 public class DroneConsumer {
 
-    private EmailProducer emailProducer;
+    private final EmailProducer emailProducer;
     public DroneConsumer(EmailProducer emailProducer) {
         this.emailProducer = emailProducer;
     }
@@ -33,6 +33,11 @@ public class DroneConsumer {
     @Value("${spring.kafka.consumer.client-id}")
     String kafkaConsumerClientId;
 
+    public static final Double TEMPERATURA_MINIMA_RECOMENDADA = 0.0;
+    public static final Double TEMPERATURA_MAXIMA_RECOMENDADA = 35.0;
+    public static final Double UMIDADE_MINIMA_RECOMENDADA = 15.0;
+    public static final long DURACAO_MAXIMA_DRONE_EM_ALERTA = 1;
+
     @KafkaListener(topics = "${topic.name.consumer}",
             groupId = "${spring.kafka.consumer.group-id}",
             clientIdPrefix = "${spring.kafka.consumer.client-id}",
@@ -41,21 +46,29 @@ public class DroneConsumer {
         log.info(drone.toString());
         // Caso o drone esteja com o rastreamento desligado, o alerta não funcionará
         if (drone.getRastrear() &&
-                (drone.getTemperatura() <= 0 || drone.getTemperatura() >= 35 ||
-                        drone.getUmidade() <= 15)) {
+                (drone.getTemperatura() <= TEMPERATURA_MINIMA_RECOMENDADA ||
+                        drone.getTemperatura() >= TEMPERATURA_MAXIMA_RECOMENDADA ||
+                        drone.getUmidade() <= UMIDADE_MINIMA_RECOMENDADA)) {
             // O e-mail será enviado apenas se o primeiro alerta ocorreu a mais de um minuto atrás
             if (dronesAlerta.containsKey(drone.getId())) {
-                LocalDateTime primeiroAlerta = dronesAlerta.get(drone.getId());
-                long tempoPrimeiroAlerta = primeiroAlerta.until(LocalDateTime.now(), ChronoUnit.MINUTES);
-                if (tempoPrimeiroAlerta >= 1) {
+                LocalDateTime dataHoraPrimeiroAlerta = dronesAlerta.get(drone.getId());
+                long duracaoAlertaMinutos = dataHoraPrimeiroAlerta.until(LocalDateTime.now(), ChronoUnit.MINUTES);
+                if (duracaoAlertaMinutos >= DURACAO_MAXIMA_DRONE_EM_ALERTA) {
                     emailProducer.send(drone);
-                    log.warn("Notifica por e-mail >> Drone " + drone.getId() + " a mais de 1 min em situação de alerta!!!");
+                    log.warn("Notifica por e-mail >> Drone " + drone.getId() + " a mais de " + DURACAO_MAXIMA_DRONE_EM_ALERTA + " min em situação de alerta!!!");
                     dronesAlerta.remove(drone.getId());
                 }
             } else {
                 dronesAlerta.put(drone.getId(), LocalDateTime.now());
                 log.warn("Drone " + drone.getId() + " em alerta!");
             }
+        } else {
+            // Caso o drone esteja com rastreamento desligado ou está com temperatura e umidade dentro
+            // das condições de normalidade estabelecidas, desativa-o de dronesAlerta (se houver)
+            if (dronesAlerta.containsKey(drone.getId())) {
+                log.warn("Drone " + drone.getId() + " fora da situação de alerta...");
+            }
+            dronesAlerta.remove(drone.getId());
         }
     }
 }
