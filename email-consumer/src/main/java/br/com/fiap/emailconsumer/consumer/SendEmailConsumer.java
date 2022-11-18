@@ -13,7 +13,7 @@ public class SendEmailConsumer {
 
     private static final Logger log = LoggerFactory.getLogger(SendEmailConsumer.class);
 
-    private static EmailService emailService;
+    private final EmailService emailService;
 
     @Value("${topic.name.consumer}")
     String topicNameConsumer;
@@ -37,11 +37,11 @@ public class SendEmailConsumer {
             containerFactory = "sendEmailListener")
     public void consume(Drone drone) {
         log.info(drone.toString());
-        String emailText = "Drone " + drone.getId() + " está em alerta a mais de um minuto devido temperatura ou umidade extremas (de risco).\n"
+        String emailText = "Drone " + drone.getId() + " está em alerta a mais de 1 minuto devido temperatura ou umidade fora das condições normais (de risco).\n"
                 + "Temperatura: " + drone.getTemperatura() + "ºC \n"
                 + "Umidade: " + drone.getUmidade() + "% \n"
                 + "Localização (latitude, longitude): (" + drone.getLatitude() + " , " + drone.getLongitude() + ")\n\n"
-                + "<i><b>Favor verificar se poderá acionar instrumentos para amenizar clima extremo</b></i>";
+                + "<i><b>Favor verificar se poderá acionar instrumentos para atuar nas condições do clima</b></i>";
 
         emailService.sendSimpleMessage(emailTo, "Drone " + drone.getId() + " alerta!", emailText);
     }
