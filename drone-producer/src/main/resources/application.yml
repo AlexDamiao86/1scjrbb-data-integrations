@@ -9,8 +9,12 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.LongSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
+springdoc:
+  api-docs:
+    path: /api-docs
+
 topic:
   name:
     producer: drone-data
   partition:
-    number: 5
+    number: 1

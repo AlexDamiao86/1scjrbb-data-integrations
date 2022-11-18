@@ -74,11 +74,17 @@ gradle bootRun
 3. Iniciar o email-consumer:
 
 ```bash
-cd drone-producer
+cd email-consumer
 gradle bootRun
 ```
 
-4. Testar aplicação enviando requisições via Postman ou CURL:
+4. Testar aplicação enviando requisições via Swagger ou CURL:
+
+#### SWAGGER
+
+[Swagger UI](http://localhost:8080/swagger-ui/index.html)
+
+#### CURL
 
 ```bash
 curl --location --request POST 'localhost:8080/drone/publish' \

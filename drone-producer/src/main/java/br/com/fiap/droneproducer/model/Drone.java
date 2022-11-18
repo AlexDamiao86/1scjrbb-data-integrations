@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @ToString
 public class Drone {
 
-    @NotNull
+    @NotNull @Min(1)
     private Long id;
     @NotNull @Min(-90) @Max(90)
     private Double latitude;
