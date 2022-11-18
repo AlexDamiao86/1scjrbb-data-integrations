@@ -52,34 +52,51 @@ Observação: O e-mail será enviado para o endereço informado em campo no appl
 
 ## ⚙️ Executando o projeto 
 
-1. Iniciar o Kafka Broker: 
+1. Clonar projeto do GitHub e ir até a pasta do projeto:
+
+```bash
+git clone https://github.com/AlexDamiao86/1scjrbb-data-integrations.git
+cd 1scjrbb-data-integrations
+```
+
+2. Iniciar o Kafka Broker: 
 
 ```bash
 docker-compose up -d
 ```
 
-2. Iniciar o drone-producer:
+3. Iniciar o drone-producer:
 
 ```bash
 cd drone-producer
 gradle bootRun
 ```
 
-3. Iniciar o drone-consumer:
+4. Iniciar o drone-consumer:
 
 ```bash
-cd drone-producer
+cd drone-consumer
 gradle bootRun
 ```
 
-3. Iniciar o email-consumer:
+5. Iniciar o email-consumer:
+
+<i>Observação</i>: Para o correto funcionamento dessa aplicação, é necessário possuir uma conta de e-mail GMAIL (remetente da mensagem). 
+Além disso, deverá ser criada uma senha de App para esse GMAIL conforme instruções no seguinte endereço: https://support.google.com/accounts/answer/185833?hl=pt-BR
+
+Ao executar a aplicação deverão ser informadas as seguintes variáveis de ambiente (ver application.yml):
+~~~yaml
+GMAIL_SERVER_USERNAME=<seu-email-gmail>
+GMAIL_SERVER_PASSWORD=<sua-chave-app-gmail>
+EMAIL_TO=<email-destinatario>
+~~~
 
 ```bash
 cd email-consumer
-gradle bootRun
+gradle bootRun -D GMAIL_SERVER_USERNAME=<seu-email-gmail> -D GMAIL_SERVER_PASSWORD=<sua-chave-app-gmail> -D EMAIL_TO=<email-destinatario>
 ```
 
-4. Testar aplicação enviando requisições via Swagger ou CURL:
+6. Testar aplicação enviando requisições via Swagger ou CURL:
 
 #### SWAGGER
 

@@ -23,4 +23,4 @@ topic:
     consumer: send-email
 
 email:
-  to: alex_maiabr@hotmail.com
+  to: EMAIL_TO
