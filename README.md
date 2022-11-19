@@ -25,8 +25,10 @@ Caso os dados recebidos estejam válidos, gera mensagem no tópico <i>drone-data
 Caso contrário, devolve HTTP Status Code 400 (Bad Request) e lista com campo e respectiva mensagem de erro.
 
 2) <i>drone-consumer</i> - Consome mensagens do tópico <i>drone-data</i>, analisa os dados e verifica se a área monitorada por um determinado drone encontra-se em condições climáticas alarmantes. 
-Se este mesmo drone continuar informando condições climáticas alarmantes por mais de 1 minuto será gerado uma mensagem no tópico <i>send-email</i>.
+Se este mesmo drone continuar informando condições climáticas alarmantes por mais de 1 minuto será gerada uma mensagem no tópico <i>send-email</i>.
 
+<i>Observação:</i> Se o drone retornar a temperatura ou umidade consideradas como normais, ele será considerado como fora de alarme. 
+O mesmo acontece se o drone deixar de ser rastreado, ou seja, apresentar o valor "false" para o campo "Rastrear". 
 
 3) <i>email-consumer</i> - Consome mensagens do tópico <i>send-email</i>, para cada uma das mensagens recebidas no tópico, envia mensagem de e-mail de alerta com os dados obtidos na última leitura do respectivo drone. 
 Observação: O e-mail será enviado para o endereço informado em campo no application.yml da aplicação.
@@ -93,7 +95,7 @@ EMAIL_TO=<email-destinatario>
 
 ```bash
 cd email-consumer
-gradle bootRun -D GMAIL_SERVER_USERNAME=<seu-email-gmail> -D GMAIL_SERVER_PASSWORD=<sua-chave-app-gmail> -D EMAIL_TO=<email-destinatario>
+GMAIL_SERVER_USERNAME=<seu-email-gmail> GMAIL_SERVER_PASSWORD=<sua-chave-app-gmail> EMAIL_TO=<email-destinatario> gradle bootRun
 ```
 
 6. Testar aplicação enviando requisições via Swagger ou CURL:
