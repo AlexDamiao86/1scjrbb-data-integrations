@@ -18,3 +18,10 @@ topic:
     producer: drone-data
   partition:
     number: 1
+
+camel:
+  springboot:
+    name: RestCamel
+
+timer:
+  period: 10000
