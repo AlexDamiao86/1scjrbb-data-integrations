@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  drone-producer:
+    image: alexdamiao86/drone-producer:1.0.0
+    container_name: drone-producer
+    ports:
+      - "8080:8080"
+    networks:
+      - drone-net
+
+  drone-consumer:
+    image: alexdamiao86/drone-consumer:1.0.0
+    container_name: drone-consumer
+    networks:
+      - drone-net
+
+  email-consumer:
+    image: alexdamiao86/email-consumer:1.0.0
+    container_name: email-consumer
+    environment:
+      GMAIL_SERVER_USERNAME: ${GMAIL_SERVER_USERNAME}
+      GMAIL_SERVER_PASSWORD: ${GMAIL_SERVER_PASSWORD}
+      EMAIL_TO: ${EMAIL_TO}
+    networks:
+      - drone-net
+
+networks:
+  drone-net:
+    driver: bridge
