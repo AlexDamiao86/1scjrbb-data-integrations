@@ -4,7 +4,7 @@ server:
 spring:
   kafka:
     producer:
-      bootstrap-servers: 0.0.0.0:9092
+      bootstrap-servers: ${KAFKA_BROKER}
       client-id: drone-producer
       key-serializer: org.apache.kafka.common.serialization.LongSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
