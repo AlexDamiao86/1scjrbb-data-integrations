@@ -1,6 +1,6 @@
 # Drone Monitor
 
-![Badge em Desenvolvimento](http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=GREEN&style=for-the-badge)
+![Badge em Desenvolvimento](http://img.shields.io/static/v1?label=STATUS&message=FINALIZADO&color=GREEN&style=for-the-badge)
 
 ## 🎯 Objetivo
 
@@ -23,6 +23,8 @@ Valida as informações recebidas dos drones que deverão atender algumas condi�
 
 Caso os dados recebidos estejam válidos, gera mensagem no tópico <i>drone-data</i> e devolve o HTTP Status Code 202 (Accepted) para o drone.
 Caso contrário, devolve HTTP Status Code 400 (Bad Request) e lista com campo e respectiva mensagem de erro.
+
+<i>Observação:</i> A aplicação conta com um scheduler que simula o envio de dados de 3 drones a cada 10 segundos. 
 
 2) <i>drone-consumer</i> - Consome mensagens do tópico <i>drone-data</i>, analisa os dados e verifica se a área monitorada por um determinado drone encontra-se em condições climáticas alarmantes. 
 Se este mesmo drone continuar informando condições climáticas alarmantes por mais de 1 minuto será gerada uma mensagem no tópico <i>send-email</i>.
@@ -118,6 +120,17 @@ curl --location --request POST 'localhost:8080/drone/publish' \
 "rastrear": true  
 }
 ```
+
+7. Visualizar mensagens criadas nos tópicos através do KafDrop (Kafka Cluster Overview)
+
+#### [KafDrop](http://localhost:9000/)
+
+- [Mensagens tópico drone-data](http://localhost:9000/topic/drone-data/messages)
+
+- [Mensagens tópico send-email](http://localhost:9000/topic/send-email/messages)
+
+8. Conferir recebimento de e-mail no endereço informado como destinatário. 
+
 
 ## 👨🏽‍💻 Desenvolvedores
 
