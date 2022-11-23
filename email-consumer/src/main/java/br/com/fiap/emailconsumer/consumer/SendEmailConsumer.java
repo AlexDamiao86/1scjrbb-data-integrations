@@ -37,11 +37,11 @@ public class SendEmailConsumer {
             containerFactory = "sendEmailListener")
     public void consume(Drone drone) {
         log.info(drone.toString());
-        String emailText = "Drone " + drone.getId() + " está em alerta a mais de 1 minuto devido temperatura ou umidade fora das condições normais.\n"
-                + "Temperatura: " + drone.getTemperatura() + "ºC \n"
+        String emailText = "Drone " + drone.getId() + " esta em alerta a mais de 1 minuto devido temperatura ou umidade fora das condicoes normais.\n"
+                + "Temperatura: " + drone.getTemperatura() + "C \n"
                 + "Umidade: " + drone.getUmidade() + "% \n"
-                + "Localização (latitude, longitude): (" + drone.getLatitude() + " , " + drone.getLongitude() + ")\n\n"
-                + "Favor verificar se poderá acionar instrumentos para atuar nas condições do clima.";
+                + "Localizacao (latitude, longitude): (" + drone.getLatitude() + " , " + drone.getLongitude() + ")\n\n"
+                + "Favor verificar se podera acionar instrumentos para atuar nas condicoes do clima.";
 
         emailService.sendSimpleMessage(emailTo, "Drone " + drone.getId() + " alerta!", emailText);
     }

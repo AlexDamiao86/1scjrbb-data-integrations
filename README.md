@@ -63,44 +63,46 @@ git clone https://github.com/AlexDamiao86/1scjrbb-data-integrations.git
 cd 1scjrbb-data-integrations
 ```
 
-2. Iniciar o Kafka Broker: 
-
-```bash
-docker-compose up -d
-```
-
-3. Iniciar o drone-producer:
-
-```bash
-cd drone-producer
-gradle bootRun
-```
-
-4. Iniciar o drone-consumer:
-
-```bash
-cd drone-consumer
-gradle bootRun
-```
-
-5. Iniciar o email-consumer:
-
-<i>Observação</i>: Para o correto funcionamento dessa aplicação, é necessário possuir uma conta de e-mail GMAIL (remetente da mensagem). 
+<i>Observação</i>: Para o correto funcionamento dessa aplicação, é necessário possuir uma conta de e-mail GMAIL (remetente da mensagem).
 Além disso, deverá ser criada uma senha de App para esse GMAIL conforme instruções no seguinte endereço: https://support.google.com/accounts/answer/185833?hl=pt-BR
 
-Ao executar a aplicação deverão ser informadas as seguintes variáveis de ambiente (ver application.yml):
-~~~yaml
-GMAIL_SERVER_USERNAME=<seu-email-gmail>
-GMAIL_SERVER_PASSWORD=<sua-chave-app-gmail>
+2. Gerar o arquivo .env na pasta do projeto tal como .env-example informando os valores para as seguintes variáveis de ambiente:
+
+````dotenv
+GMAIL_SERVER_USERNAME=<gmail-username>
+GMAIL_SERVER_PASSWORD=<gmail-senha-app>
 EMAIL_TO=<email-destinatario>
-~~~
+````
+
+3. Iniciar o Kafka Broker e demais aplicações: 
 
 ```bash
-cd email-consumer
-GMAIL_SERVER_USERNAME=<seu-email-gmail> GMAIL_SERVER_PASSWORD=<sua-chave-app-gmail> EMAIL_TO=<email-destinatario> gradle bootRun
+docker-compose --env-file .env up
 ```
 
-6. Testar aplicação enviando requisições via Swagger ou CURL:
+4. Aguardar algum tempo até que o sistema fique totalmente funcional (em torno de 70 segundos). No console do terminal serão vistas mensagens semelhante a listagem abaixo:
+
+````shell
+drone-producer  | 2022-11-23 00:40:04.380  INFO 1 --- [           main] b.c.f.d.DroneProducerApplication         : Started DroneProducerApplication in 69.341 seconds (JVM running for 73.803)
+drone-producer  | Auto drone 9999999 enviou mensagem.. 
+drone-producer  | Drone(id=9999999, latitude=-80.54, longitude=120.87, temperatura=13.0, umidade=50.0, rastrear=true)
+drone-producer  | 2022-11-23 00:40:04.452  INFO 1 --- [   scheduling-1] o.a.k.clients.producer.ProducerConfig    : ProducerConfig values: 
+(...)
+drone-producer  | 2022-11-23 00:40:04.902  INFO 1 --- [rone-producer-1] org.apache.kafka.clients.Metadata        : [Producer clientId=drone-producer-1] Resetting the last seen epoch of partition drone-data-0 to 0 since the associated topicId changed from null to _zLFhga4QCKaDjs8mWqt9w
+broker          | [2022-11-23 00:40:04,905] DEBUG [Controller id=1] There is no producerId block yet (Zk path version 0), creating the first block (kafka.controller.KafkaController)
+drone-producer  | 2022-11-23 00:40:04.910  INFO 1 --- [rone-producer-1] org.apache.kafka.clients.Metadata        : [Producer clientId=drone-producer-1] Cluster ID: xzncMGzKTNKKRu10XtCocw
+broker          | [2022-11-23 00:40:04,915] INFO [Controller id=1] Acquired new producerId block ProducerIdsBlock{brokerId=1, producerIdStart=0, producerIdLen=1000} by writing to Zk with path version 1 (kafka.controller.KafkaController)
+drone-producer  | 2022-11-23 00:40:04.951  INFO 1 --- [rone-producer-1] o.a.k.c.p.internals.TransactionManager   : [Producer clientId=drone-producer-1] ProducerId set to 0 with epoch 0
+drone-producer  | Auto drone 8888888 enviou mensagem.. 
+drone-producer  | Drone(id=8888888, latitude=-72.23, longitude=170.87, temperatura=34.0, umidade=89.0, rastrear=true)
+drone-producer  | Auto drone 7777777 enviou mensagem.. 
+drone-producer  | Drone(id=7777777, latitude=56.78, longitude=102.87, temperatura=13.0, umidade=89.0, rastrear=true)
+drone-consumer  | 2022-11-23 00:40:05.208  INFO 1 --- [ntainer#0-0-C-1] b.c.f.d.consumer.DroneConsumer           : Drone(id=9999999, latitude=-80.54, longitude=120.87, temperatura=13.0, umidade=50.0, rastrear=true)
+drone-consumer  | 2022-11-23 00:40:05.292  INFO 1 --- [ntainer#0-0-C-1] b.c.f.d.consumer.DroneConsumer           : Drone(id=8888888, latitude=-72.23, longitude=170.87, temperatura=34.0, umidade=89.0, rastrear=true)
+drone-consumer  | 2022-11-23 00:40:05.292  INFO 1 --- [ntainer#0-0-C-1] b.c.f.d.consumer.DroneConsumer           : Drone(id=7777777, latitude=56.78, longitude=102.87, temperatura=13.0, umidade=89.0, rastrear=true)
+````
+
+5. Testar aplicação enviando requisições via Swagger ou CURL:
 
 #### SWAGGER
 
@@ -121,7 +123,7 @@ curl --location --request POST 'localhost:8080/drone/publish' \
 }
 ```
 
-7. Visualizar mensagens criadas nos tópicos através do KafDrop (Kafka Cluster Overview)
+6. Visualizar mensagens criadas nos tópicos através do KafDrop (Kafka Cluster Overview)
 
 #### [KafDrop](http://localhost:9000/)
 
@@ -129,7 +131,7 @@ curl --location --request POST 'localhost:8080/drone/publish' \
 
 - [Mensagens tópico send-email](http://localhost:9000/topic/send-email/messages)
 
-8. Conferir recebimento de e-mail no endereço informado como destinatário. 
+7. Conferir recebimento de e-mail no endereço informado como destinatário. 
 
 
 ## 👨🏽‍💻 Desenvolvedores

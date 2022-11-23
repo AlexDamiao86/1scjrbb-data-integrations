@@ -55,7 +55,7 @@ public class DroneConsumer {
                 long duracaoAlertaMinutos = dataHoraPrimeiroAlerta.until(LocalDateTime.now(), ChronoUnit.MINUTES);
                 if (duracaoAlertaMinutos >= DURACAO_MAXIMA_DRONE_EM_ALERTA) {
                     emailProducer.send(drone);
-                    log.warn("Notifica por e-mail >> Drone " + drone.getId() + " a mais de " + DURACAO_MAXIMA_DRONE_EM_ALERTA + " min em situação de alerta!!!");
+                    log.warn("Notifica por e-mail >> Drone " + drone.getId() + " a mais de " + DURACAO_MAXIMA_DRONE_EM_ALERTA + " min em situacao de alerta!!!");
                     dronesAlerta.remove(drone.getId());
                 }
             } else {
@@ -66,7 +66,7 @@ public class DroneConsumer {
             // Caso o drone esteja com rastreamento desligado ou está com temperatura e umidade dentro
             // das condições de normalidade estabelecidas, desativa-o de dronesAlerta (se houver)
             if (dronesAlerta.containsKey(drone.getId())) {
-                log.warn("Drone " + drone.getId() + " fora da situação de alerta...");
+                log.warn("Drone " + drone.getId() + " fora da situacao de alerta...");
             }
             dronesAlerta.remove(drone.getId());
         }

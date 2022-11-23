@@ -1,11 +1,11 @@
----
+## Comando para executar
+## docker-compose -f docker-compose-kafka.yml up -d
+
 version: '3'
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.0.1
     container_name: zookeeper
-    networks:
-      - broker-kafka
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -17,8 +17,6 @@ services:
       # To learn about configuring Kafka for access across networks see
       # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
       - "9092:9092"
-    networks:
-      - broker-kafka
     depends_on:
       - zookeeper
     environment:
@@ -33,15 +31,9 @@ services:
   kafdrop:
     image: obsidiandynamics/kafdrop:latest
     container_name: kafdrop
-    networks:
-      - broker-kafka
     depends_on:
       - broker
     ports:
       - "9000:9000"
     environment:
       KAFKA_BROKERCONNECT: 'broker:29092'
-
-networks:
-  broker-kafka:
-    driver: bridge

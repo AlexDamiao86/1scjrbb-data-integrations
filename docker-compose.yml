@@ -1,13 +1,13 @@
+## Comando para executar
 ## docker-compose --env-file .env up
-## docker-compose convert
 
 version: '3.8'
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.0.1
     container_name: zookeeper
-#    networks:
-#      - broker-kafka
+    networks:
+      - drone-net
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -15,12 +15,13 @@ services:
   broker:
     image: confluentinc/cp-kafka:7.0.1
     container_name: broker
+    hostname: broker
     ports:
       # To learn about configuring Kafka for access across networks see
       # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
       - "9092:9092"
-#    networks:
-#      - broker-kafka
+    networks:
+      - drone-net
     depends_on:
       - zookeeper
     environment:
@@ -35,8 +36,8 @@ services:
   kafdrop:
     image: obsidiandynamics/kafdrop:latest
     container_name: kafdrop
-#    networks:
-#      - broker-kafka
+    networks:
+      - drone-net
     depends_on:
       - broker
     ports:
@@ -47,29 +48,38 @@ services:
   drone-producer:
     image: alexdamiao86/drone-producer:1.0.0
     container_name: drone-producer
+    depends_on:
+      - broker
     ports:
       - "8080:8080"
-#    networks:
-#      - broker-kafka
+    environment:
+      KAFKA_BROKER: 'broker:29092'
+    networks:
+      - drone-net
 
   drone-consumer:
     image: alexdamiao86/drone-consumer:1.0.0
     container_name: drone-consumer
-#    networks:
-#      - broker-kafka
+    depends_on:
+      - broker
+    environment:
+      KAFKA_BROKER: 'broker:29092'
+    networks:
+      - drone-net
 
   email-consumer:
     image: alexdamiao86/email-consumer:1.0.0
     container_name: email-consumer
+    depends_on:
+      - broker
     environment:
+      KAFKA_BROKER: 'broker:29092'
       GMAIL_SERVER_USERNAME: ${GMAIL_SERVER_USERNAME}
       GMAIL_SERVER_PASSWORD: ${GMAIL_SERVER_PASSWORD}
       EMAIL_TO: ${EMAIL_TO}
-#    networks:
-#      - broker-kafka
-#
-#networks:
-#  broker-kafka:
-#    driver: bridge
-#  drone-net:
-#    driver: bridge
+    networks:
+      - drone-net
+
+networks:
+  drone-net:
+    driver: bridge
